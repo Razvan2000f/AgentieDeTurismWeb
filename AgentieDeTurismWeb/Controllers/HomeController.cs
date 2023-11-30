@@ -77,7 +77,7 @@ namespace AgentieDeTurismWeb.Controllers
             return View("Search", hotels);
         }
 
-        public IActionResult OpenDetails(int id, Result hotel)
+        public IActionResult OpenDetails(int id, string name, string photo, string description, string address)
         {
             List<HotelRooms> hotelRooms=new List<HotelRooms>();
             using (StreamReader r = new StreamReader(_webHostEnvironment.WebRootPath + "\\input\\rooms.json"))
@@ -85,7 +85,23 @@ namespace AgentieDeTurismWeb.Controllers
                 string json = r.ReadToEnd();
                 hotelRooms = JsonSerializer.Deserialize<List<HotelRooms>>(json);
             }
-            return View("Room", hotelRooms[0]);
+
+
+            HotelDetailViewModel hotelDetailViewModel = new HotelDetailViewModel()
+            {
+                HotelViewModel = new HotelViewModel()
+                {
+                    Result = new Result()
+                    {
+                        hotel_name = name
+                    },
+                    Description = description,
+                    Photo = photo
+                },
+                Rooms = hotelRooms[0]
+            };
+
+            return View("Room", hotelDetailViewModel);
         }
     }
 }
