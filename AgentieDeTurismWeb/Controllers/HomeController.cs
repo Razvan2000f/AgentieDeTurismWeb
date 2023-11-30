@@ -25,8 +25,8 @@ namespace AgentieDeTurismWeb.Controllers
         public IActionResult Privacy()
         {
             return View();
-        }    
-        
+        }
+
         public IActionResult Contact()
         {
             return View();
@@ -40,8 +40,8 @@ namespace AgentieDeTurismWeb.Controllers
 
         public IActionResult checkBookingOptions(DateTime dateStart, DateTime dateEnd, int noAdults, int noChildren)
         {
-            List<Result> results = new List<Result>();   
-            using (StreamReader r = new StreamReader(_webHostEnvironment.WebRootPath +"\\input\\input.json"))
+            List<Result> results = new List<Result>();
+            using (StreamReader r = new StreamReader(_webHostEnvironment.WebRootPath + "\\input\\input.json"))
             {
                 string json = r.ReadToEnd();
                 Root root = JsonSerializer.Deserialize<Root>(json);
@@ -54,19 +54,38 @@ namespace AgentieDeTurismWeb.Controllers
             IEnumerable<string> enumerablePhotos = photos.Where(x => x.StartsWith("/images") && !x.Contains("\""));
             List<string> listPhotos = enumerablePhotos.ToList();
 
-            List<HotelViewModel> hotels = new List<HotelViewModel>();   
-            for(int i = 0; i < results.Count; i++)
+            HotelDescription description = new HotelDescription();
+            using (StreamReader r = new StreamReader(_webHostEnvironment.WebRootPath + "\\input\\description.json"))
+            {
+                string json = r.ReadToEnd();
+                List<HotelDescription> descriptions = JsonSerializer.Deserialize<List<HotelDescription>>(json);
+                description = descriptions[1];
+            }
+
+            List<HotelViewModel> hotels = new List<HotelViewModel>();
+            for (int i = 0; i < results.Count; i++)
             {
                 HotelViewModel hotel = new HotelViewModel()
                 {
                     Result = results[i],
-                    Photo = "https://cf.bstatic.com"+"/xdata"+listPhotos[i]
+                    Photo = "https://cf.bstatic.com" + "/xdata" + listPhotos[i],
+                    Description = description.description.Split(".")[0]
                 };
                 hotels.Add(hotel);
             }
-           
 
             return View("Search", hotels);
+        }
+
+        public IActionResult OpenDetails(int id, Result hotel)
+        {
+            List<HotelRooms> hotelRooms=new List<HotelRooms>();
+            using (StreamReader r = new StreamReader(_webHostEnvironment.WebRootPath + "\\input\\rooms.json"))
+            {
+                string json = r.ReadToEnd();
+                hotelRooms = JsonSerializer.Deserialize<List<HotelRooms>>(json);
+            }
+            return View("Room", hotelRooms[0]);
         }
     }
 }

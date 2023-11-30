@@ -49,9 +49,10 @@
                                         <small class="border-end me-3 pe-3"><i class="fa fa-bath text-primary me-2"></i>2 Bath</small>
                                         <small><i class="fa fa-wifi text-primary me-2"></i>Wifi</small>
                                     </div>
-                                    <p class="text-body mb-3">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet lorem.</p>
+                                    <p class="text-body mb-3">@hotel.Description</p>
                                     <div class="d-flex justify-content-between">
-                                        <a class="btn btn-sm btn-primary rounded py-2 px-4" href="">View Detail</a>
+                                        <form asp-action=""
+                                        <a class="btn btn-sm btn-primary rounded py-2 px-4" asp-action="OpenDetails" asp-route-id=@hotel.Result.hotel_id >View Detail</a>
                                         <a class="btn btn-sm btn-dark rounded py-2 px-4" href="">Book Now</a>
                                     </div>
                                 </div>
