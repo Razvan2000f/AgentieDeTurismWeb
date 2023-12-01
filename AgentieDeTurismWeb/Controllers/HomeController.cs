@@ -69,7 +69,7 @@ namespace AgentieDeTurismWeb.Controllers
                 {
                     Result = results[i],
                     Photo = "https://cf.bstatic.com" + "/xdata" + listPhotos[i],
-                    Description = description.description.Split(".")[0]
+                    Description = description.description
                 };
                 hotels.Add(hotel);
             }
@@ -77,7 +77,7 @@ namespace AgentieDeTurismWeb.Controllers
             return View("Search", hotels);
         }
 
-        public IActionResult OpenDetails(int id, string name, string photo, string description, string address)
+        public IActionResult OpenDetails(int id, string name, string photo, string description, double latitude, double longitude, string address)
         {
             List<HotelRooms> hotelRooms=new List<HotelRooms>();
             using (StreamReader r = new StreamReader(_webHostEnvironment.WebRootPath + "\\input\\rooms.json"))
@@ -93,7 +93,10 @@ namespace AgentieDeTurismWeb.Controllers
                 {
                     Result = new Result()
                     {
-                        hotel_name = name
+                        hotel_name = name,
+                        latitude=latitude,
+                        longitude=longitude,
+                        address_trans=address
                     },
                     Description = description,
                     Photo = photo

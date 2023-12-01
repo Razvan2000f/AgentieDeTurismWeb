@@ -36,24 +36,14 @@
                                     </div>
                                 </div>
                                 <div class="d-flex mb-3">
-                                    <small class="border-end me-3 pe-3"><i class="fa fa-bed text-primary me-2"></i>3 Bed</small>
-                                    <small class="border-end me-3 pe-3"><i class="fa fa-bath text-primary me-2"></i>2 Bath</small>
-                                    <small><i class="fa fa-wifi text-primary me-2"></i>Wifi</small>
+                                    <small><i class="text-primary me-2"></i>@Model.HotelViewModel.Result.address_trans</small>
                                 </div>
                                 <p class="text-body mb-3">@Model.HotelViewModel.Description</p>
-                                <div class="d-flex justify-content-between">
-                                    <a class="btn btn-sm btn-primary rounded py-2 px-4" asp-action="OpenDetails" asp-route-id="@Model.HotelViewModel.Result.hotel_id" asp-route-name="@Model.HotelViewModel.Result.hotel_name" asp-route-photo="@Model.HotelViewModel.Photo" asp-route-description="@Model.HotelViewModel.Description">View Details</a>
-                                    <a class="btn btn-sm btn-dark rounded py-2 px-4" href="">Book Now</a>
-                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-6 fadeInUp">
-                        <div class="room-item shadow rounded overflow-hidden">
-                            <div class="position-relative">
-                            </div>
-                        </div>
-
+                    <div class="col-lg-6">
+                        <div style="width: 100%"><iframe width="100%" height="500" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=@Model.HotelViewModel.Result.latitude,@Model.HotelViewModel.Result.longitude+(My%20Business%20Name)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"><a href="https://www.maps.ie/population/">Population calculator map</a></iframe></div>
                     </div>
                 </div>
                 <div class="bg-white shadow" style="padding: 35px;">
@@ -90,10 +80,10 @@
                                         @foreach (var configuration in room.Value.bed_configurations)
                                         {
                                             <label>Option:</label>
-                                        @foreach (var bedType in configuration.bed_types)
+                                            @foreach (var bedType in configuration.bed_types)
                                             {
                                                 <label>@bedType.description</label>
-                                        }
+                                            }
                                         }
                                     </div>
 
@@ -105,9 +95,9 @@
                                     </div>
                                 </div>
                             </div>
-                        <div class="col-md-1">
-                            <button type="submit" class="btn btn-primary w-100">Book</button>
-                        </div>
+                            <div class="col-md-1">
+                                <button type="submit" class="btn btn-primary w-100">Book</button>
+                            </div>
                         }
                     </div>
                 </div>
