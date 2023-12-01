@@ -1,5 +1,6 @@
 ﻿using AgentieDeTurismWeb.Models;
 using AgentieDeTurismWeb.Models.BookingAPI;
+using AgentieDeTurismWeb.Models.SkyScannerAPI;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Text.Json;
@@ -105,6 +106,21 @@ namespace AgentieDeTurismWeb.Controllers
             };
 
             return View("Room", hotelDetailViewModel);
+        }
+
+        public IActionResult checkFlightOptions()
+        {
+            RootSky root;
+
+            using (StreamReader r = new StreamReader(_webHostEnvironment.WebRootPath + "\\input\\zboruri.json"))
+            {
+                string json = r.ReadToEnd();
+                root = JsonSerializer.Deserialize<RootSky>(json);
+            }
+
+            List<Itinerary> itineraries = root.data.itineraries;
+
+            return View("Flights", itineraries);
         }
     }
 }
