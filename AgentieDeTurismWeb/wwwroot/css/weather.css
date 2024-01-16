@@ -1,0 +1,40 @@
+﻿@import url('https://fonts.googleapis.com/css?family=Overlock');
+
+body {
+    background: #643a7a;
+}
+
+.front {
+    box-shadow: -1rem 0 1rem rgba(0, 0, 0, .2);
+    animation: slide 1s;
+    transition: 1s ease-in-out;
+    z-index: 1000;
+}
+
+.front .temperature {
+    float: left;
+    margin-left: 20px;
+    font-size: 45px;
+    line-height: 90px;
+}
+
+.front .info {
+    float: left;
+    margin: 1rem;
+    font-size: 1.2rem;
+    line-height: 20px;
+}
+
+.front .preview {
+    float: right;
+    font-weight: 400;
+    text-align: right;
+    font-size: 1.2rem;
+    line-height: 20px;
+    margin: 25px 20px 0 0;
+}
+
+    .front .preview td {
+        padding: 0 3px;
+        text-transform: uppercase;
+    }

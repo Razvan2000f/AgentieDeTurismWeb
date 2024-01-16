@@ -1,4 +1,6 @@
-﻿using AgentieDeTurismWeb.Models.BookingAPI;
+﻿using AgentieDeTurismWeb.Models.ActivitiesAPI;
+using AgentieDeTurismWeb.Models.BookingAPI;
+using AgentieDeTurismWeb.Models.WeatherAPI;
 using System.Text.Json;
 
 namespace AgentieDeTurismWeb.Services
@@ -35,7 +37,7 @@ namespace AgentieDeTurismWeb.Services
             return description;
         }
 
-        internal List<HotelRooms> GetAllRooms(int id)
+        public List<HotelRooms> GetAllRooms(int id)
         {
             List<HotelRooms> hotelRooms = new List<HotelRooms>();
             using (StreamReader r = new StreamReader(_webHostEnvironment.WebRootPath + "\\input\\rooms.json"))
@@ -44,6 +46,32 @@ namespace AgentieDeTurismWeb.Services
                 hotelRooms = JsonSerializer.Deserialize<List<HotelRooms>>(json);
             }
             return hotelRooms;
+        }
+
+        public RootWeather GetCurrentWeather(double longitude, double latitude)
+        {
+            RootWeather weather;
+
+            using (StreamReader r = new StreamReader(_webHostEnvironment.WebRootPath + "\\input\\weather.json"))
+            {
+                string json = r.ReadToEnd();
+                weather = JsonSerializer.Deserialize<RootWeather>(json);
+            }
+
+            return weather;
+        }
+
+        public List<Activity> GetCountryActivities(string country)
+        {
+            RootActivities activities;
+
+            using (StreamReader r = new StreamReader(_webHostEnvironment.WebRootPath + "\\input\\activities.json"))
+            {
+                string json = r.ReadToEnd();
+                activities = JsonSerializer.Deserialize<RootActivities>(json);
+            }
+
+            return activities.data.activities;
         }
     }
 }
