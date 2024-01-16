@@ -8,20 +8,27 @@ namespace AgentieDeTurismWeb.Services
     public class HotelService
     {
         public IWebHostEnvironment _webHostEnvironment;
-        public HotelService(IWebHostEnvironment webHostEnvironment)
+        private HttpService _httpService;
+        public HotelService(IWebHostEnvironment webHostEnvironment, HttpService httpService)
         {
             _webHostEnvironment = webHostEnvironment;
+            _httpService = httpService;
         }
 
         public List<Result> GetAllHotels(DateTime dateStart, DateTime dateEnd, int noAdults, int noChildren)
         {
             List<Result> results = new List<Result>();
-            using (StreamReader r = new StreamReader(_webHostEnvironment.WebRootPath + "\\input\\input.json"))
-            {
-                string json = r.ReadToEnd();
-                Root root = JsonSerializer.Deserialize<Root>(json);
-                results = root.result;
-            }
+
+            string path = "/properties/list?offset=0&arrival_date=2024-1-21&departure_date=2024-1-24&guest_qty=2&dest_ids=-3712125&room_qty=1&search_type=city&children_qty=2&children_age=5%2C7&search_id=none&price_filter_currencycode=USD&order_by=popularity&languagecode=en-us&travel_purpose=leisure";
+            string body=_httpService.CreateBookingAPIRequest(path).Result;
+            Root root=JsonSerializer.Deserialize<Root>(body);
+            results = root.result;
+            //using (StreamReader r = new StreamReader(_webHostEnvironment.WebRootPath + "\\input\\input.json"))
+            //{
+            //    string json = r.ReadToEnd();
+            //    Root root = JsonSerializer.Deserialize<Root>(json);
+            //    results = root.result;
+            //}
             return results;
         }
 
