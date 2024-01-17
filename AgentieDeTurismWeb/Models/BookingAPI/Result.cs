@@ -12,11 +12,8 @@
         public int hotel_id { get; set; }
         public PriceBreakdown price_breakdown { get; set; }
         public double latitude { get; set; }
-        public int preferred_plus { get; set; }
-        public int preferred { get; set; }
         public double longitude { get; set; }
         public string currency_code { get; set; }
-        public int review_nr { get; set; }
         public double review_score { get; set; }
         public string hotel_name_trans { get; set; }
         public string zip { get; set; }
@@ -33,16 +30,8 @@
         public string country_trans { get; set; }
         public string distance_to_cc { get; set; }
         public int is_smart_deal { get; set; }
-        public int min_total_price { get; set; }
         public string currencycode { get; set; }
-        public string districts { get; set; }
-        public int has_free_parking { get; set; }
         public string address_trans { get; set; }
-        public int is_mobile_deal { get; set; }
-        public int in_best_district { get; set; }
-        public string district { get; set; }
-        public int has_swimming_pool { get; set; }
-        public string cc1 { get; set; }
         public string review_recommendation { get; set; }
         public string default_language { get; set; }
         public int cant_book { get; set; }

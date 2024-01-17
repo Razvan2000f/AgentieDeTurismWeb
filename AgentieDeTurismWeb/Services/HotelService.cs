@@ -1,6 +1,8 @@
 ﻿using AgentieDeTurismWeb.Models.ActivitiesAPI;
 using AgentieDeTurismWeb.Models.BookingAPI;
 using AgentieDeTurismWeb.Models.WeatherAPI;
+using System.Diagnostics.Metrics;
+using System.IO;
 using System.Text.Json;
 
 namespace AgentieDeTurismWeb.Services
@@ -15,68 +17,60 @@ namespace AgentieDeTurismWeb.Services
             _httpService = httpService;
         }
 
-        public List<Result> GetAllHotels(DateTime dateStart, DateTime dateEnd, int noAdults, int noChildren)
+        public List<Result> GetAllHotels(string country, string dateStart, string dateEnd, int noAdults)
         {
             List<Result> results = new List<Result>();
 
-            string path = "/properties/list?offset=0&arrival_date=2024-1-21&departure_date=2024-1-24&guest_qty=2&dest_ids=-3712125&room_qty=1&search_type=city&children_qty=2&children_age=5%2C7&search_id=none&price_filter_currencycode=USD&order_by=popularity&languagecode=en-us&travel_purpose=leisure";
-            string body=_httpService.CreateBookingAPIRequest(path).Result;
-            Root root=JsonSerializer.Deserialize<Root>(body);
+            string body = _httpService.CreateBookingAPIHotelRequest(country, dateStart, dateEnd, noAdults).Result;
+            body = body.Replace("null", "0");
+            Root root = JsonSerializer.Deserialize<Root>(body);
             results = root.result;
-            //using (StreamReader r = new StreamReader(_webHostEnvironment.WebRootPath + "\\input\\input.json"))
-            //{
-            //    string json = r.ReadToEnd();
-            //    Root root = JsonSerializer.Deserialize<Root>(json);
-            //    results = root.result;
-            //}
+
             return results;
         }
 
-        public HotelDescription GetHotelDescription()
+        public string GetHotelPhoto(int hotel_id)
         {
-            HotelDescription description = new HotelDescription();
-            using (StreamReader r = new StreamReader(_webHostEnvironment.WebRootPath + "\\input\\description.json"))
-            {
-                string json = r.ReadToEnd();
-                List<HotelDescription> descriptions = JsonSerializer.Deserialize<List<HotelDescription>>(json);
-                description = descriptions[1];
-            }
-            return description;
+            string path = "/properties/get-hotel-photos?hotel_ids=" + hotel_id;
+            string body = _httpService.CreateBookingAPIRequest(path).Result;
+
+            string[] photos = body.Split("\",\"/xdata");
+            IEnumerable<string> enumerablePhotos = photos.Where(x => x.StartsWith("/images") && !x.Contains("\""));
+            List<string> listPhotos = enumerablePhotos.ToList();
+
+            return listPhotos[0];
+        }
+
+        public HotelDescription GetHotelDescription(int hotel_id)
+        {
+            string path = "/properties/get-description?hotel_ids=" + hotel_id;
+            string body = _httpService.CreateBookingAPIRequest(path).Result;
+
+            List<HotelDescription> descriptions = JsonSerializer.Deserialize<List<HotelDescription>>(body);
+
+            return descriptions[0];
         }
 
         public List<HotelRooms> GetAllRooms(int id)
         {
-            List<HotelRooms> hotelRooms = new List<HotelRooms>();
-            using (StreamReader r = new StreamReader(_webHostEnvironment.WebRootPath + "\\input\\rooms.json"))
-            {
-                string json = r.ReadToEnd();
-                hotelRooms = JsonSerializer.Deserialize<List<HotelRooms>>(json);
-            }
+            string path = "/properties/v2/get-rooms?hotel_id=" + id + "&departure_date=2024-1-23&arrival_date=2024-1-21&rec_guest_qty=2&rec_room_qty=1&currency_code=USD&languagecode=en-us&units=imperial";
+            string body = _httpService.CreateBookingAPIRequest(path).Result;
+            List<HotelRooms> hotelRooms = JsonSerializer.Deserialize<List<HotelRooms>>(body);
             return hotelRooms;
         }
 
-        public RootWeather GetCurrentWeather(double longitude, double latitude)
+        public RootWeather GetCurrentWeather(double latitude, double longitude)
         {
-            RootWeather weather;
-
-            using (StreamReader r = new StreamReader(_webHostEnvironment.WebRootPath + "\\input\\weather.json"))
-            {
-                string json = r.ReadToEnd();
-                weather = JsonSerializer.Deserialize<RootWeather>(json);
-            }
+            string body = _httpService.CreateWeatherAPIRequest(latitude, longitude).Result;
+            RootWeather weather = JsonSerializer.Deserialize<RootWeather>(body);
 
             return weather;
         }
 
         public List<Activity> GetCountryActivities(string country)
         {
-            RootActivities activities;
-
-            using (StreamReader r = new StreamReader(_webHostEnvironment.WebRootPath + "\\input\\activities.json"))
-            {
-                string json = r.ReadToEnd();
-                activities = JsonSerializer.Deserialize<RootActivities>(json);
-            }
+            string body = _httpService.CreateTravelInfoAPIRequest(country).Result;
+            RootActivities activities = JsonSerializer.Deserialize<RootActivities>(body);
 
             return activities.data.activities;
         }
