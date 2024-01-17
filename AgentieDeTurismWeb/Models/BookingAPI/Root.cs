@@ -13,7 +13,6 @@ namespace AgentieDeTurismWeb.Models.BookingAPI
         public int extended_count { get; set; }
         public List<object> applied_filters { get; set; }
         public int unfiltered_primary_count { get; set; }
-        public int search_radius { get; set; }
         public List<string> copyright { get; set; }
         public int ranking_version { get; set; }
         public int unfiltered_count { get; set; }
