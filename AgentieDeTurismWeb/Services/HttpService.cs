@@ -20,7 +20,7 @@ namespace AgentieDeTurismWeb.Services
                 RequestUri = new Uri("https://" + host + path),
                 Headers =
                 {
-                    { "X-RapidAPI-Key", "513f0e999fmshb1bcb7de96db259p1e0c0ajsn4b4dd94a8dd9" },
+                    { "X-RapidAPI-Key", "aba58a0bc8msh132ac8c5d90f2f8p173601jsndc89d5831806" },
                     { "X-RapidAPI-Host", host },
                 },
             };

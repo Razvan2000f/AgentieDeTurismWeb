@@ -1,6 +1,7 @@
 ﻿using AgentieDeTurismWeb.Models.ActivitiesAPI;
 using AgentieDeTurismWeb.Models.BookingAPI;
 using AgentieDeTurismWeb.Models.WeatherAPI;
+using Microsoft.AspNetCore.Http;
 using System.Diagnostics.Metrics;
 using System.IO;
 using System.Text.Json;
@@ -20,11 +21,16 @@ namespace AgentieDeTurismWeb.Services
         public List<Result> GetAllHotels(string country, string dateStart, string dateEnd, int noAdults)
         {
             List<Result> results = new List<Result>();
+            Root root;
+            //  string body = _httpService.CreateBookingAPIHotelRequest(country, dateStart, dateEnd, noAdults).Result;
+            //  body = body.Replace("null", "0");
 
-            string body = _httpService.CreateBookingAPIHotelRequest(country, dateStart, dateEnd, noAdults).Result;
-            body = body.Replace("null", "0");
-            Root root = JsonSerializer.Deserialize<Root>(body);
-            results = root.result;
+            using (StreamReader r = new StreamReader(_webHostEnvironment.WebRootPath + "\\input\\input.json"))
+            {
+                string json = r.ReadToEnd();
+                root = JsonSerializer.Deserialize<Root>(json);
+                results = root.result;
+            }
 
             return results;
         }
@@ -46,14 +52,22 @@ namespace AgentieDeTurismWeb.Services
             string path = "/properties/get-description?hotel_ids=" + hotel_id;
             string body = _httpService.CreateBookingAPIRequest(path).Result;
 
-            List<HotelDescription> descriptions = JsonSerializer.Deserialize<List<HotelDescription>>(body);
+            List<HotelDescription> descriptions;
+
+            using (StreamReader r = new StreamReader(_webHostEnvironment.WebRootPath + "\\input\\description.json"))
+            {
+                string json = r.ReadToEnd();
+                descriptions = JsonSerializer.Deserialize<List<HotelDescription>>(json);
+
+            }
+
 
             return descriptions[0];
         }
 
         public List<HotelRooms> GetAllRooms(int id)
         {
-            string path = "/properties/v2/get-rooms?hotel_id=" + id + "&departure_date=2024-1-23&arrival_date=2024-1-21&rec_guest_qty=2&rec_room_qty=1&currency_code=USD&languagecode=en-us&units=imperial";
+            string path = "/properties/v2/get-rooms?hotel_id=" + id + "&departure_date=2024-6-23&arrival_date=2024-6-21&rec_guest_qty=2&rec_room_qty=1&currency_code=USD&languagecode=en-us&units=imperial";
             string body = _httpService.CreateBookingAPIRequest(path).Result;
             List<HotelRooms> hotelRooms = JsonSerializer.Deserialize<List<HotelRooms>>(body);
             return hotelRooms;
@@ -70,7 +84,14 @@ namespace AgentieDeTurismWeb.Services
         public List<Activity> GetCountryActivities(string country)
         {
             string body = _httpService.CreateTravelInfoAPIRequest(country).Result;
-            RootActivities activities = JsonSerializer.Deserialize<RootActivities>(body);
+            RootActivities activities;
+
+            using (StreamReader r = new StreamReader(_webHostEnvironment.WebRootPath + "\\input\\activities.json"))
+            {
+                string json = r.ReadToEnd();
+                activities = JsonSerializer.Deserialize<RootActivities>(json);
+
+            }
 
             return activities.data.activities;
         }
