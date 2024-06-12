@@ -12,6 +12,7 @@ namespace AgentieDeTurismWeb.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly int ShowIndex = 5;
 
         private readonly FlightService _flightService;
         private readonly HotelService _hotelService;
@@ -26,11 +27,11 @@ namespace AgentieDeTurismWeb.Controllers
 
         public IActionResult Index()
         {
-            List<Result> results = _hotelService.GetAllHotels("Hanoi","2024-2-1","2024-2-8",2);
+            List<Result> results = _hotelService.GetAllHotels("Hanoi","2024-8-1","2024-8-8",2);
             results = results.OrderByDescending(result => result.review_score).ToList();
 
             List<HotelViewModel> hotels = new List<HotelViewModel>();
-            for (int i = 0; i < results.Count; i++)
+            for (int i = 0; i < ShowIndex; i++)
             {
                 string photoPath = _hotelService.GetHotelPhoto(results[i].hotel_id);
                 HotelDescription description = _hotelService.GetHotelDescription(results[i].hotel_id);
@@ -71,7 +72,7 @@ namespace AgentieDeTurismWeb.Controllers
             List<AgentieDeTurismWeb.Models.ActivitiesAPI.Activity> activities = _hotelService.GetCountryActivities(dropdown);
 
             List<HotelViewModel> hotels = new List<HotelViewModel>();
-            for (int i = 0; i < results.Count; i++)
+            for (int i = 0; i < ShowIndex; i++)
             {
                 string photoPath=_hotelService.GetHotelPhoto(results[i].hotel_id);
                 HotelDescription description = _hotelService.GetHotelDescription(results[i].hotel_id);
